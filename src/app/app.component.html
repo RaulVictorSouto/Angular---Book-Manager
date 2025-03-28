@@ -1,9 +1,24 @@
 <div class="flex flex-col min-h-screen">
   <app-cabecalho></app-cabecalho>
+
   <div  class="flex justify-between items-center p-3 px-8 shadow-md">
     <app-buttom-menu></app-buttom-menu>
     <app-search-bar></app-search-bar>
   </div>
-  <router-outlet></router-outlet>
+
+  <main class="flex-grow p-4">
+    <router-outlet></router-outlet>
+
+    <!-- Lista de livros -->
+    <div *ngIf="showBookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-8">
+      <app-display-book
+        *ngFor="let book of books"
+        [book]="book"
+      ></app-display-book>
+    </div>
+
+  </main>
+
+  <app-add-bottom></app-add-bottom>
   <app-rodape class="mt-auto"></app-rodape>
 </div>
