@@ -1,3 +1,5 @@
+import { Genre } from '../models/genre.model';
+import { Author } from '../models/author.model';
 export interface Book {
   bookID: string;
   bookTitle: string;
@@ -11,12 +13,3 @@ export interface Book {
   genres: Genre[];
 }
 
-export interface Author {
-  authorID: number;
-  authorName: string;
-}
-
-export interface Genre {
-  genreID: number;
-  genreName: string;
-}

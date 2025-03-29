@@ -1,4 +1,9 @@
-<button class="fixed bottom-16 right-6 w-20 h-20 bg-gradient-to-br from-sky-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-full shadow-xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center group">
+<app-modal-book
+  [isOpen]="showModal"
+  (close)="showModal = false"></app-modal-book>
+  <!-- (submitBook)="handleBookSubmit($event)" isso tava dentro de app-modal-book-->
+
+<button (click)="showModal = true" class="fixed bottom-16 right-6 w-20 h-20 bg-gradient-to-br from-sky-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-full shadow-xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center group">
   <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 group-hover:rotate-90 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
   </svg>

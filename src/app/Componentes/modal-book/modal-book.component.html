@@ -1,0 +1,87 @@
+<div class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-60" *ngIf="isOpen">
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-6xl p-6 max-h-[90vh] overflow-y-auto">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-xl font-bold text-gray-800">{{ bookId ? 'Editar Livro' : 'Adicionar Novo Livro' }}</h2>
+      <button (click)="closeModal()" class="text-gray-500 hover:text-gray-700">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <form [formGroup]="bookForm" (ngSubmit)="onSubmit()" class="space-y-4">
+      <div class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Título</label>
+            <input type="text" formControlName="title"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Idioma</label>
+            <input type="text" formControlName="language"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Editora</label>
+            <input type="text" formControlName="publisher"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">ISBN</label>
+            <input type="text" formControlName="isbn"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Classificação</label>
+            <select formControlName="rating"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="" disabled selected>Selecione uma classificação</option>
+              <option value="Livre">Livre</option>
+              <option value="+10">+10</option>
+              <option value="+12">+12</option>
+              <option value="+14">+14</option>
+              <option value="+16">+16</option>
+              <option value="+18">+18</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <app-modal-book-author-selector></app-modal-book-author-selector>
+        <app-modal-book-genre-selector></app-modal-book-genre-selector>
+      </div>
+
+      <div class="grid grid-cols-1 gap-4">
+        <app-modal-book-tags></app-modal-book-tags>
+      </div>
+
+      <div class="grid grid-cols-1 gap-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Capa do Livro</label>
+        <div class="mt-1 flex items-center">
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" class="hidden" id="cover-upload">
+          <label for="cover-upload" class="cursor-pointer bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            Selecionar Imagem
+          </label>
+          <span class="ml-2 text-sm text-gray-500 truncate">{{ selectedFile?.name || 'Nenhum arquivo selecionado' }}</span>
+        </div>
+      </div>
+
+      <div class="flex justify-between space-x-3 pt-4">
+        <button type="button" (click)="closeModal()" class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">
+          Cancelar
+        </button>
+        <button type="submit" [disabled]="bookForm.invalid" class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-300">
+          {{ bookId ? 'Salvar' : 'Adicionar' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
