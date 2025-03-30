@@ -1,12 +1,15 @@
 <div class="flex justify-between items-center p-6 px-12 text-white shadow-md background">
-  <div>
-    <h1 class="text-4xl font-bold text-white-800">Gerenciamento<br>de Livros</h1>
+  <div class="cursor-pointer" (click)="goToHome()">
+    <h1 class="text-4xl font-bold text-white hover:text-gray-200 transition-colors duration-200">
+      Gerenciador<br>
+      <span class="text-amber-200">de Livros</span>
+    </h1>
   </div>
 
   <div class="flex flex-col gap-2">
     <div class="text-right">
       <p class="text-sm text-white">Seja bem-vindo(a)</p>
-      <p class="font-medium text-2xl">Admin</p>
+      <p class="font-medium text-2xl text-amber-200">Admin</p>
     </div>
     <div class="flex flex-row gap-4">
       <button class="text-white px-4 py-2 rounded border border-white/30 transition-all

@@ -17,5 +17,5 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './app.component.css'
 })
 export class AppComponent{
-  title = 'Gerenciamento de Livros';
+  title = 'Gerenciador de Livros';
 }
