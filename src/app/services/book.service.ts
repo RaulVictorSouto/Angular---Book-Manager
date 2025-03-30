@@ -19,4 +19,12 @@ export class BookService{
   addBook(bookData: FormData): Observable<Book> {
     return this.http.post<Book>(`${this.apiUrl}`, bookData);
   }
+
+  getBookById(id: string): Observable<Book> {
+    return this.http.get<Book>(`${this.apiUrl}/${id}`);
+  }
+
+  updateBook(id: string, bookData: FormData): Observable<Book> {
+    return this.http.put<Book>(`${this.apiUrl}/${id}`, bookData);
+  }
 }

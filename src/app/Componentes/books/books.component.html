@@ -1,0 +1,28 @@
+  <!-- Spinner de Carregamento -->
+  <div *ngIf="loading" class="flex justify-center items-center h-64">
+    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-sky-500"></div>
+  </div>
+
+<!-- Lista de livros -->
+<div *ngIf="showBookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-8">
+  <app-display-book
+    *ngFor="let book of books"
+    [book]="book"
+    (click) = "openEditModal(book)"
+  ></app-display-book>
+</div>
+
+
+<!-- Modal de edição -->
+<app-modal-book
+*ngIf="isEditModalOpen"
+[isOpen]="isEditModalOpen"
+[bookId]="selectedBook?.id"
+(close)="isEditModalOpen = false"
+></app-modal-book>
+
+
+ <!-- Mensagem quando não há livros -->
+ <div *ngIf="!loading && books.length === 0" class="text-center py-12">
+  <div class="text-gray-500">Nenhum livro encontrado</div>
+</div>

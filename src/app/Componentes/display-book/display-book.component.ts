@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output} from '@angular/core';
 import { Book } from '../../../models/book.model';
 
 
@@ -11,6 +11,12 @@ import { Book } from '../../../models/book.model';
 })
 export class DisplayBookComponent {
   @Input() book: Book | null = null;
+  @Output() editClicked = new EventEmitter<any>();
+
+  onEditClick(event: MouseEvent) {
+    event.stopPropagation();
+    this.editClicked.emit(this.book);
+  }
 
   getAuthorsString(): string {
     if (!this.book?.authors?.length) return 'Autor desconhecido';

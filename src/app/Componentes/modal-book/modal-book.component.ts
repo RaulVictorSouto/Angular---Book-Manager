@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ModalBookAuthorSelectorComponent } from "../modal-book-author-selector/modal-book-author-selector.component";
 import { ModalBookGenreSelectorComponent } from "../modal-book-genre-selector/modal-book-genre-selector.component";
 import { ModalBookTagsComponent } from "../modal-book-tags/modal-book-tags.component";
+import { BookService } from '../../services/book.service';
 
 @Component({
   selector: 'app-modal-book',
@@ -22,7 +23,20 @@ export class ModalBookComponent {
   bookForm: FormGroup;
   selectedFile: File | null = null;
 
-  constructor(private fb: FormBuilder) {
+  ngOnInit() {
+    if (this.bookId) {
+      this.loadBookData(this.bookId);
+    }
+  }
+
+  loadBookData(id: string) {
+    // Carrega os dados do livro para edição
+    this.bookService.getBookById(id).subscribe(book => {
+      this.bookForm.patchValue(book);
+    });
+  }
+
+  constructor(private fb: FormBuilder, private bookService: BookService ) {
     this.bookForm = this.fb.group({
       title: ['', Validators.required],
       language: ['', Validators.required],
@@ -41,6 +55,7 @@ export class ModalBookComponent {
   }
 
   onSubmit(): void {
+    debugger;
     if (this.bookForm.valid) {
       const formData = new FormData();
       formData.append('title', this.bookForm.value.title);

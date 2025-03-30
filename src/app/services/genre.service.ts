@@ -13,6 +13,7 @@ export class GenreService{
   constructor(private http: HttpClient) {}
 
   getGenre(): Observable<Genre[]>{
+    debugger;
     return this.http.get<Genre[]>(this.apiUrl);
   }
 }
