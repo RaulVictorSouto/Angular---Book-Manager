@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { ModalBookComponent } from '../modal-book/modal-book.component';
 import { NavigationEnd, Router } from '@angular/router';
-import { filter, Subscription } from 'rxjs';
+import { filter, Subject, Subscription, takeUntil } from 'rxjs';
 import { ModalAuthorComponent } from '../modal-author/modal-author.component';
 import { RouteService } from '../../../services/route.services';
 import { NgIf } from '@angular/common';
@@ -13,17 +13,17 @@ import { NgIf } from '@angular/common';
   templateUrl: './add-bottom.component.html',
   styleUrl: './add-bottom.component.css'
 })
-export class AddBottomComponent {
+export class AddBottomComponent implements OnDestroy{
   showModal = false;
   @Output() clicked = new EventEmitter<void>();
   currentRoute = '';
-  private routeSub: Subscription;
+  private destroy$ = new Subject<void>();
 
   constructor(private routeService: RouteService, private router: Router) {
-    // Correção: Use o operador filter para garantir que só recebemos NavigationEnd
-    this.routeSub = this.router.events
+    this.router.events
       .pipe(
-        filter((event): event is NavigationEnd => event instanceof NavigationEnd)
+        filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+        takeUntil(this.destroy$)
       )
       .subscribe(event => {
         this.currentRoute = event.url;
@@ -31,18 +31,12 @@ export class AddBottomComponent {
       });
   }
 
-  handleBookSubmit(bookData: any) {
-    // Lógica para submeter livro
+  handleSubmit(): void {
     this.showModal = false;
   }
 
-  handleAuthorSubmit(authorData: any) {
-    // Lógica para submeter autor
-    this.showModal = false;
-  }
-
-  handleGenreSubmit(genreData: any) {
-    // Lógica para submeter gênero
-    this.showModal = false;
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

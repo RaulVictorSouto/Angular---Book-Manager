@@ -7,14 +7,12 @@
 
 <app-modal-book *ngIf="currentRoute === '/livros' && showModal"
     [isOpen]="showModal"
-    (close)="showModal = false"
-    (submitBook)="handleBookSubmit($event)">
+    (close)="showModal = false">
 </app-modal-book>
 
 <app-modal-author *ngIf="currentRoute === '/autores' && showModal"
     [isOpen]="showModal"
-    (close)="showModal = false"
-    (submitAuthor)="handleAuthorSubmit($event)">
+    (close)="showModal = false">
 </app-modal-author>
 
 

@@ -24,6 +24,12 @@ export class AuthorService{
     return this.http.post(this.apiUrl, author);
   }
 
+  //DELETE
+  deleteAuthor(authorID: number): Observable<void>{
+    debugger;
+    return this.http.delete<void>(`${this.apiUrl}/${authorID}`);
+  }
+
   //para atualizar a lista de autores
   // Observable que outros componentes podem escutar
   authorCreated$ = this.authorCreatedSource.asObservable();

@@ -17,6 +17,8 @@ export class AuthorsComponent {
   loading = true;
   showModal = false;
   private authorSubscription!: Subscription;
+  showDeleteModal = false;
+  authorToDelete: number | null = null;
 
   // Paginação
   paginatedAuthors: any[] = [];
@@ -62,5 +64,35 @@ export class AuthorsComponent {
   onPageChange(page: number): void {
     this.currentPage = page;
     this.updatePaginatedAuthors();
+  }
+
+  openDeleteModal(authorID: number): void {
+    this.authorToDelete = authorID;
+    this.showDeleteModal = true;
+  }
+
+  cancelDelete(): void {
+    this.showDeleteModal = false;
+    this.authorToDelete = null;
+  }
+
+  confirmDelete(): void {
+    if (this.authorToDelete) {
+      this.authorService.deleteAuthor(this.authorToDelete).subscribe({
+        next: () => {
+          this.authors = this.authors.filter(author => author.authorID !== this.authorToDelete);
+          this.totalItems = this.authors.length;
+
+          const totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
+          if (this.currentPage > totalPages) {
+            this.currentPage = Math.max(totalPages, 1);
+          }
+          this.updatePaginatedAuthors();
+          this.showDeleteModal = false;
+          this.authorToDelete = null;
+        },
+        error: (err) => console.error('Erro ao deletar autor', err)
+      });
+    }
   }
 }
