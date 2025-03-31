@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
 import { Genre } from '../../../models/genre.model';
-import { GenreService } from '../../services/genre.service';
+import { GenreService } from '../../../services/genre.service';
 
 @Component({
   selector: 'app-modal-book-genre-selector',

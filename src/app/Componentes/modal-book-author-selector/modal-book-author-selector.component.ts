@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { Author } from '../../../models/author.model';
-import { AuthorService } from '../../services/author.service';
+import { AuthorService } from '../../../services/author.service';
 import { FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
 

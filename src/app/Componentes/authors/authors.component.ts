@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { Author } from '../../../models/author.model';
-import { AuthorService } from '../../services/author.service';
+import { AuthorService } from '../../../services/author.service';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from "../pagination/pagination.component";
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-authors',
@@ -14,6 +15,8 @@ import { PaginationComponent } from "../pagination/pagination.component";
 export class AuthorsComponent {
   authors: Author[] = [];
   loading = true;
+  showModal = false;
+  private authorSubscription!: Subscription;
 
   // Paginação
   paginatedAuthors: any[] = [];
@@ -21,15 +24,21 @@ export class AuthorsComponent {
   itemsPerPage = 10;
   totalItems = 0;
 
-  constructor(private authorService: AuthorService) { }
+  constructor(private authorService: AuthorService, private authorEventService: AuthorService ) { }
 
   ngOnInit(): void {
-    debugger;
-    this.loadGenres();
+    this.loadAuthor();
+
+    this.authorSubscription = this.authorService.authorCreated$.subscribe(() => {
+      this.loadAuthor();
+    });
   }
 
-  loadGenres(): void {
-    debugger;
+  ngOnDestroy(): void {
+    this.authorSubscription.unsubscribe();
+  }
+
+  loadAuthor(): void {
     this.authorService.getAuthor().subscribe({
       next: (data) => {
         this.authors = data;

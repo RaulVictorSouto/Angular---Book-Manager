@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Subscription, filter } from 'rxjs';
-import { RouteService } from './services/route.services';
+//import { RouteService } from '../services/route.services';
 
 @Component({
   selector: 'app-root',
@@ -19,21 +19,6 @@ import { RouteService } from './services/route.services';
   styleUrl: './app.component.css'
 })
 
-export class AppComponent implements OnDestroy {
+export class AppComponent {
   title = 'Gerenciador de Livros';
-  private routerSub: Subscription;
-
-  constructor(private router: Router, private routeService: RouteService ) {
-    this.routerSub = this.router.events
-      .pipe(
-        filter((event): event is NavigationEnd => event instanceof NavigationEnd)
-      )
-      .subscribe((event) => {
-        this.routeService.updateCurrentRoute(event.url);
-      });
-  }
-
-  ngOnDestroy() {
-    this.routerSub?.unsubscribe();
-  }
 }
