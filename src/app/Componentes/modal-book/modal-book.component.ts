@@ -5,6 +5,8 @@ import { ModalBookAuthorSelectorComponent } from "../modal-book-author-selector/
 import { ModalBookGenreSelectorComponent } from "../modal-book-genre-selector/modal-book-genre-selector.component";
 import { ModalBookTagsComponent } from "../modal-book-tags/modal-book-tags.component";
 import { BookService } from '../../services/book.service';
+import { Subscription } from 'rxjs';
+import { RouteService } from '../../services/route.services';
 
 @Component({
   selector: 'app-modal-book',
@@ -22,21 +24,10 @@ export class ModalBookComponent {
 
   bookForm: FormGroup;
   selectedFile: File | null = null;
+  currentRoute: string = '';
+  private routeSub!: Subscription;
 
-  ngOnInit() {
-    if (this.bookId) {
-      this.loadBookData(this.bookId);
-    }
-  }
-
-  loadBookData(id: string) {
-    // Carrega os dados do livro para edição
-    this.bookService.getBookById(id).subscribe(book => {
-      this.bookForm.patchValue(book);
-    });
-  }
-
-  constructor(private fb: FormBuilder, private bookService: BookService ) {
+  constructor(private fb: FormBuilder, private bookService: BookService, private routeService: RouteService ) {
     this.bookForm = this.fb.group({
       title: ['', Validators.required],
       language: ['', Validators.required],
@@ -47,6 +38,27 @@ export class ModalBookComponent {
       genders: [''],
       tags: [''],
       coverPage: ['']
+    });
+  }
+
+  ngOnInit() {
+    if (this.bookId) {
+      this.loadBookData(this.bookId);
+    }
+
+    this.routeSub = this.routeService.currentRoute$.subscribe((route) => {
+      this.currentRoute = route;
+    });
+  }
+
+  ngOnDestroy(){
+    this.routeSub?.unsubscribe();
+  }
+
+  loadBookData(id: string) {
+    // Carrega os dados do livro para edição
+    this.bookService.getBookById(id).subscribe(book => {
+      this.bookForm.patchValue(book);
     });
   }
 
