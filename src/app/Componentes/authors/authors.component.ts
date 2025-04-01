@@ -4,11 +4,12 @@ import { AuthorService } from '../../../services/author.service';
 import { CommonModule } from '@angular/common';
 import { PaginationComponent } from "../pagination/pagination.component";
 import { Subscription } from 'rxjs';
+import { ModalAuthorComponent } from "../modal-author/modal-author.component";
 
 @Component({
   selector: 'app-authors',
   standalone: true,
-  imports: [CommonModule, PaginationComponent],
+  imports: [CommonModule, PaginationComponent, ModalAuthorComponent],
   templateUrl: './authors.component.html',
   styleUrl: './authors.component.css'
 })
@@ -16,9 +17,11 @@ export class AuthorsComponent {
   authors: Author[] = [];
   loading = true;
   showModal = false;
+  showEditModal = false;
   private authorSubscription!: Subscription;
   showDeleteModal = false;
   authorToDelete: number | null = null;
+  currentAuthorID: number | null = null;
 
   // Paginação
   paginatedAuthors: any[] = [];
@@ -26,7 +29,7 @@ export class AuthorsComponent {
   itemsPerPage = 10;
   totalItems = 0;
 
-  constructor(private authorService: AuthorService, private authorEventService: AuthorService ) { }
+  constructor(private authorService: AuthorService) { }
 
   ngOnInit(): void {
     this.loadAuthor();
@@ -94,5 +97,16 @@ export class AuthorsComponent {
         error: (err) => console.error('Erro ao deletar autor', err)
       });
     }
+  }
+
+  openEditModal(authorId: number): void {
+    debugger;
+    this.currentAuthorID = authorId;
+    this.showEditModal = true;
+  }
+
+  closeEditModal(): void {
+    this.showEditModal = false;
+    this.currentAuthorID = null;
   }
 }

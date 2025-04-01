@@ -12,6 +12,7 @@
 
 <app-modal-author *ngIf="currentRoute === '/autores' && showModal"
     [isOpen]="showModal"
+    [isEditMode] = "false"
     (close)="showModal = false">
 </app-modal-author>
 
