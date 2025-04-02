@@ -16,4 +16,10 @@
     (close)="showModal = false">
 </app-modal-author>
 
+<app-modal-genre *ngIf="currentRoute === '/generos' && showModal"
+    [isOpen]="showModal"
+    [isEditMode] = "false"
+    (close)="showModal = false">
+</app-modal-genre>
+
 

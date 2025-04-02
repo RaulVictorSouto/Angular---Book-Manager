@@ -16,7 +16,7 @@ import { ModalAuthorComponent } from "../modal-author/modal-author.component";
 export class AuthorsComponent {
   authors: Author[] = [];
   loading = true;
-  showModal = false;
+  //showModal = false;
   showEditModal = false;
   private authorSubscription!: Subscription;
   showDeleteModal = false;
@@ -43,6 +43,7 @@ export class AuthorsComponent {
     this.authorSubscription.unsubscribe();
   }
 
+  //para edição
   loadAuthor(): void {
     this.authorService.getAuthor().subscribe({
       next: (data) => {
@@ -69,6 +70,18 @@ export class AuthorsComponent {
     this.updatePaginatedAuthors();
   }
 
+  openEditModal(authorId: number): void {
+    this.currentAuthorID = authorId;
+    this.showEditModal = true;
+  }
+
+  closeEditModal(): void {
+    this.showEditModal = false;
+    this.currentAuthorID = null;
+  }
+
+
+//para exclusão
   openDeleteModal(authorID: number): void {
     this.authorToDelete = authorID;
     this.showDeleteModal = true;
@@ -97,16 +110,5 @@ export class AuthorsComponent {
         error: (err) => console.error('Erro ao deletar autor', err)
       });
     }
-  }
-
-  openEditModal(authorId: number): void {
-    debugger;
-    this.currentAuthorID = authorId;
-    this.showEditModal = true;
-  }
-
-  closeEditModal(): void {
-    this.showEditModal = false;
-    this.currentAuthorID = null;
   }
 }

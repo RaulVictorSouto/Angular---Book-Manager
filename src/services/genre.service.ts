@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import {Genre} from '../models/genre.model'
 
 @Injectable({
@@ -9,12 +9,44 @@ import {Genre} from '../models/genre.model'
 
 export class GenreService{
   private apiUrl = 'https://localhost:7078/genre';
+  private genreCreatedSource = new Subject<void>();
 
   constructor(private http: HttpClient) {}
 
+  //GET
   getGenre(): Observable<Genre[]>{
-    debugger;
     return this.http.get<Genre[]>(this.apiUrl);
   }
+
+  //GET BY ID
+  getGenreById(genreID: number): Observable<Genre>{
+    return this.http.get<Genre>(`${this.apiUrl}/${genreID}`);
+  }
+
+  //POST
+  createGenre(genre: {genreName: string}): Observable<Genre>{
+    return this.http.post<Genre>(this.apiUrl, genre);
+  }
+
+  //PUT
+  editGenre(genreID: number, genreData: any): Observable<Genre> {
+    return this.http.put<Genre>(`${this.apiUrl}/${genreID}`, genreData);
+  }
+
+  //DELETE
+  deleteGenre(genreID: number): Observable<void>{
+    return this.http.delete<void>(`${this.apiUrl}/${genreID}`);
+  }
+
+
+
+  //para atualizar a lista de generos
+  genreCreated$ = this.genreCreatedSource.asObservable();
+
+  notifyGenreCreatedOrUpdated() {
+    this.genreCreatedSource.next();
+  }
+
+
 }
 

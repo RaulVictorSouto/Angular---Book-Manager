@@ -5,11 +5,12 @@ import { filter, Subject, Subscription, takeUntil } from 'rxjs';
 import { ModalAuthorComponent } from '../modal-author/modal-author.component';
 import { RouteService } from '../../../services/route.services';
 import { NgIf } from '@angular/common';
+import { ModalGenreComponent } from '../modal-genre/modal-genre.component';
 
 @Component({
   selector: 'app-add-bottom',
   standalone: true,
-  imports: [ModalBookComponent, ModalAuthorComponent, NgIf],
+  imports: [ModalBookComponent, ModalAuthorComponent, NgIf, ModalGenreComponent],
   templateUrl: './add-bottom.component.html',
   styleUrl: './add-bottom.component.css'
 })
