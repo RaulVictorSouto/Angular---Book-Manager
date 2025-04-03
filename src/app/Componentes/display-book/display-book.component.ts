@@ -13,6 +13,7 @@ export class DisplayBookComponent {
   @Input() book: Book | null = null;
   @Output() editClicked = new EventEmitter<any>();
 
+
   onEditClick(event: MouseEvent) {
     event.stopPropagation();
     this.editClicked.emit(this.book);
@@ -29,6 +30,7 @@ export class DisplayBookComponent {
   }
 
   getCoverImage(): string {
-    return this.book?.bookCoverPage || 'assets/images/default-cover.jpg';
+    return this.book?.bookCoverPage || '../../assets/images/cover.jpg';
   }
+
 }
