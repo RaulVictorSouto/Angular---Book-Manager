@@ -12,19 +12,25 @@ export class BookService{
 
   constructor(private http: HttpClient) {}
 
+  //GET
   getBook(): Observable<Book[]> {
      return this.http.get<Book[]>(this.apiUrl);
   }
 
-  addBook(bookData: FormData): Observable<Book> {
+  //GET BY ID
+  getBookById(bookID: number): Observable<Book> {
+    return this.http.get<Book>(`${this.apiUrl}/${bookID}`);
+  }
+
+  //POST
+  createBook(bookData: FormData): Observable<Book> {
     return this.http.post<Book>(`${this.apiUrl}`, bookData);
   }
 
-  getBookById(id: string): Observable<Book> {
-    return this.http.get<Book>(`${this.apiUrl}/${id}`);
+  //PUT
+  updateBook(bookID: number, bookData: FormData): Observable<Book> {
+    return this.http.put<Book>(`${this.apiUrl}/${bookID}`, bookData);
   }
 
-  updateBook(id: string, bookData: FormData): Observable<Book> {
-    return this.http.put<Book>(`${this.apiUrl}/${id}`, bookData);
-  }
+  //DELETE
 }

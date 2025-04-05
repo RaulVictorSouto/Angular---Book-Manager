@@ -1,14 +1,13 @@
 import { Component, OnInit  } from '@angular/core';
 import { BookService } from '../../../services/book.service';
-import { Book } from '../../../models/book.model';
-import { ModalBookComponent } from "../modal-book/modal-book.component";
+import { Book } from '../../../models/book.model'
 import { DisplayBookComponent } from "../display-book/display-book.component";
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-books',
   standalone: true,
-  imports: [ModalBookComponent, DisplayBookComponent, CommonModule],
+  imports: [DisplayBookComponent, CommonModule],
   templateUrl: './books.component.html',
   styleUrl: './books.component.css'
 })
@@ -18,12 +17,7 @@ export class BooksComponent implements OnInit {
   loading = true;
   showBookList = true;
   selectedBook: any = null;
-  isEditModalOpen = false;
 
-  openEditModal(book: any){
-    this.selectedBook = book;
-    this.isEditModalOpen = true;
-  }
 
   constructor(private bookService: BookService){}
 
@@ -48,4 +42,5 @@ export class BooksComponent implements OnInit {
       }
     });
   }
+
 }

@@ -8,19 +8,8 @@
   <app-display-book
     *ngFor="let book of books"
     [book]="book"
-    (click) = "openEditModal(book)"
   ></app-display-book>
 </div>
-
-
-<!-- Modal de edição -->
-<app-modal-book
-*ngIf="isEditModalOpen"
-[isOpen]="isEditModalOpen"
-[bookId]="selectedBook?.id"
-(close)="isEditModalOpen = false"
-></app-modal-book>
-
 
  <!-- Mensagem quando não há livros -->
  <div *ngIf="!loading && books.length === 0" class="text-center py-12">

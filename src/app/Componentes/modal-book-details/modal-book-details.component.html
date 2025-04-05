@@ -1,0 +1,86 @@
+<div class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50" *ngIf="isVisible">
+  <div class="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto" (click)="$event.stopPropagation()">
+    <!-- Cabeçalho -->
+    <div class="flex justify-between items-center p-4 border-b">
+      <h2 class="text-xl font-bold text-gray-800">Ficha Técnica do Livro</h2>
+      <button class="text-gray-500 hover:text-gray-700" (click)="closeModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Corpo do Modal -->
+    <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Seção de Texto (Esquerda) -->
+      <div class="md:col-span-2 space-y-4">
+        <div>
+          <h3 class="text-2xl font-bold text-gray-900">{{ book?.bookTitle || 'Título não disponível' }}</h3>
+          <p class="text-gray-600 mt-1">por <br><b>{{ getAuthorsString() }}</b></p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <h4 class="text-sm font-semibold text-gray-500">Editora</h4>
+            <p class="text-gray-800">{{ book?.bookPublisher || 'Não informado' }}</p>
+          </div>
+          <div>
+            <h4 class="text-sm font-semibold text-gray-500">Idioma</h4>
+            <p class="text-gray-800">{{ book?.bookLanguage || 'Não informado' }}</p>
+          </div>
+          <div>
+            <h4 class="text-sm font-semibold text-gray-500">ISBN</h4>
+            <p class="text-gray-800">{{ book?.bookISBN || 'Não informado' }}</p>
+          </div>
+          <div>
+            <h4 class="text-sm font-semibold text-gray-500">Classificação Indicativa</h4>
+            <div class="flex items-center">
+              <span class="text-gray-800 mr-2">{{ book?.bookRating}}</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-sm font-semibold text-gray-500">Gêneros</h4>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <p class="text-gray-600 mt-1">{{ getGenreString() }}</p>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="text-sm font-semibold text-gray-500">Tags</h4>
+          <div class="flex flex-wrap gap-2 mt-2">
+            <p class="text-gray-600 mt-1">{{ getTagString() }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção de Imagem (Direita) -->
+      <div class="flex flex-col items-center">
+        <div class="w-full max-w-xs bg-gray-100 rounded-lg overflow-hidden shadow">
+          <img [src]="book?.bookCoverPage || '..\\..\\assets\\images\\cover.jpg'"
+               alt="Capa do livro {{ book?.bookTitle }}"
+               class="w-full h-auto object-cover">
+        </div>
+      </div>
+    </div>
+     <!-- Botões de Ação -->
+     <div class="flex justify-between gap-4 w-full p-6">
+      <button
+              class="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+        Excluir
+      </button>
+      <button
+            class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+      </svg>
+      Editar
+    </button>
+    </div>
+  </div>
+
+</div>
