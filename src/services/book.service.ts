@@ -24,6 +24,7 @@ export class BookService{
 
   //POST
   createBook(bookData: FormData): Observable<Book> {
+    debugger;
     return this.http.post<Book>(`${this.apiUrl}`, bookData);
   }
 
