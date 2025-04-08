@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Book } from '../models/book.model';
 
 @Injectable({
@@ -9,6 +9,7 @@ import { Book } from '../models/book.model';
 
 export class BookService{
   private apiUrl = 'https://localhost:7078/book';
+  private bookCreatedSource = new Subject<void>();
 
   constructor(private http: HttpClient) {}
 
@@ -36,6 +37,14 @@ export class BookService{
   //DELETE
   deleteBook(bookID: number): Observable<void>{
     return this.http.delete<void>(`${this.apiUrl}/${bookID}`);
+  }
+
+
+  //para atualizar a lista de livros
+  bookCreated$ = this.bookCreatedSource.asObservable();
+
+  notifyBookCreatedOrUpdated(){
+    this.bookCreatedSource.next();
   }
 
 }

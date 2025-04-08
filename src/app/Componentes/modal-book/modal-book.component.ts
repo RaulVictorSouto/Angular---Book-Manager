@@ -80,7 +80,7 @@ import { BookService } from '../../../services/book.service';
       next: (newBook) => {
         this.isLoading = false;
         this.submitBook.emit(newBook);
-        // this.bookService.notifyGenreCreatedOrUpdated();
+        this.bookService.notifyBookCreatedOrUpdated();
         this.closeModal();
       },
       error: (error) => {
@@ -101,5 +101,5 @@ import { BookService } from '../../../services/book.service';
 
    onFileSelected(event: any): void {
      this.selectedFile = event.target.files[0];
-   }
+    }
  }

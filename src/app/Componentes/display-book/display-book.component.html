@@ -25,5 +25,6 @@
 <app-modal-book-details
   [bookID]="selectedBookId"
   [isVisible]="showModal"
-  (onClose)="closeModal()">
+  (onClose)="closeModal()"
+  (onBookDeleted)="handleBookDeleted()">
 </app-modal-book-details>

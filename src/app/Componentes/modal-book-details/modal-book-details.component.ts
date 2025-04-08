@@ -14,6 +14,7 @@ export class ModalBookDetailsComponent {
   @Input() bookID: number | null = null;
   @Input() isVisible: boolean = false;
   @Output() onClose = new EventEmitter<void>();
+  @Output() onBookDeleted = new EventEmitter<void>();
 
   book: Book | null = null;
   books: Book[] = [];
@@ -89,6 +90,7 @@ export class ModalBookDetailsComponent {
           this.books = this.books.filter(book => book.bookID !== this.bookToDelete);
           this.showDeleteModal = false;
           this.bookToDelete = null;
+          this.onBookDeleted.emit();
         },
         error: (err) => console.error('Erro ao deletar gênero', err)
       });

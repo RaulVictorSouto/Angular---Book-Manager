@@ -1,4 +1,4 @@
-import { Component, Input} from '@angular/core';
+import { Component, EventEmitter, Input, Output} from '@angular/core';
 import { Book } from '../../../models/book.model';
 import { ModalBookDetailsComponent } from '../modal-book-details/modal-book-details.component';
 
@@ -12,6 +12,7 @@ import { ModalBookDetailsComponent } from '../modal-book-details/modal-book-deta
 })
 export class DisplayBookComponent {
   @Input() book: Book | null = null;
+  @Output() bookDeleted = new EventEmitter<void>();
 
   showModal = false;
   selectedBookId: number | null = null;
@@ -42,4 +43,8 @@ export class DisplayBookComponent {
     this.selectedBookId = null;
   }
 
+  handleBookDeleted() {
+    this.bookDeleted.emit(); // ← Propaga a exclusão para cima
+    this.closeModal();       // ← Fecha o modal
+  }
 }

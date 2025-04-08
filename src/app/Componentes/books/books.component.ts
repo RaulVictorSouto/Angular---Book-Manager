@@ -1,8 +1,9 @@
-import { Component, OnInit  } from '@angular/core';
+import { Component } from '@angular/core';
 import { BookService } from '../../../services/book.service';
 import { Book } from '../../../models/book.model'
 import { DisplayBookComponent } from "../display-book/display-book.component";
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-books',
@@ -12,17 +13,26 @@ import { CommonModule } from '@angular/common';
   styleUrl: './books.component.css'
 })
 
-export class BooksComponent implements OnInit {
+export class BooksComponent {
   books: Book[] = [];
   loading = true;
   showBookList = true;
   selectedBook: any = null;
+  private bookSubscription!: Subscription;
 
 
   constructor(private bookService: BookService){}
 
   ngOnInit(): void {
+    this.loadBooks();
+
+    this.bookSubscription = this.bookService.bookCreated$.subscribe(() => {
       this.loadBooks();
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.bookSubscription.unsubscribe();
   }
 
   loadBooks(): void {
@@ -43,4 +53,13 @@ export class BooksComponent implements OnInit {
     });
   }
 
+  onBookDeleted(): void {
+    this.loadBooks();
+    this.selectedBook = null;
+    this.showBookList = true;
+  }
+
+  onBookCreated() {
+    this.loadBooks();
+  }
 }
