@@ -71,8 +71,8 @@ export class GenresComponent {
     this.updatePaginatedGenres();
   }
 
-  openEditModal(authorId: number): void {
-    this.currentGenreID = authorId;
+  openEditModal(genreId: number): void {
+    this.currentGenreID = genreId;
     this.showEditModal = true;
   }
 
@@ -82,8 +82,8 @@ export class GenresComponent {
   }
 
   //para exclusão
-  openDeleteModal(authorID: number): void {
-    this.genreToDelete = authorID;
+  openDeleteModal(genreID: number): void {
+    this.genreToDelete = genreID;
     this.showDeleteModal = true;
   }
 

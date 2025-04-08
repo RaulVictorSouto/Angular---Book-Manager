@@ -16,7 +16,10 @@ export class ModalBookDetailsComponent {
   @Output() onClose = new EventEmitter<void>();
 
   book: Book | null = null;
+  books: Book[] = [];
   loading: boolean = false;
+  bookToDelete: number | null = null;
+  showDeleteModal = false;
 
   constructor(private bookService: BookService) {}
 
@@ -63,5 +66,32 @@ export class ModalBookDetailsComponent {
   getTagString(): string{
     if (!this.book?.bookTagsList?.length) return 'Nenhuma tag registrada';
     return this.book.bookTagsList.join(', ');
+  }
+
+
+  //para exclusão
+  openDeleteModal(bookID: number): void {
+    this.bookToDelete = bookID;
+    this.showDeleteModal = true;
+    this.isVisible = false;
+  }
+
+  cancelDelete(){
+    this.showDeleteModal = false;
+    this.bookToDelete = null;
+    this.isVisible = true;
+  }
+
+  confirmDelete(): void {
+    if (this.bookToDelete) {
+      this.bookService.deleteBook(this.bookToDelete).subscribe({
+        next: () => {
+          this.books = this.books.filter(book => book.bookID !== this.bookToDelete);
+          this.showDeleteModal = false;
+          this.bookToDelete = null;
+        },
+        error: (err) => console.error('Erro ao deletar gênero', err)
+      });
+    }
   }
 }

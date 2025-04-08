@@ -67,6 +67,7 @@
      <!-- Botões de Ação -->
      <div class="flex justify-between gap-4 w-full p-6">
       <button
+      (click)="book && openDeleteModal(book.bookID)"
               class="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -83,4 +84,22 @@
     </div>
   </div>
 
+</div>
+
+
+<!-- Modal de Confirmação de Exclusão -->
+<div *ngIf="showDeleteModal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+  <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+    <h2 class="text-lg font-semibold text-gray-900">Confirmar Exclusão</h2>
+    <p class="text-gray-600 mt-2">Tem certeza que deseja excluir este livro?</p>
+
+    <div class="mt-4 flex justify-end space-x-2">
+      <button (click)="cancelDelete()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">
+        Cancelar
+      </button>
+      <button (click)="confirmDelete()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+        Excluir
+      </button>
+    </div>
+  </div>
 </div>

@@ -34,4 +34,8 @@ export class BookService{
   }
 
   //DELETE
+  deleteBook(bookID: number): Observable<void>{
+    return this.http.delete<void>(`${this.apiUrl}/${bookID}`);
+  }
+
 }
