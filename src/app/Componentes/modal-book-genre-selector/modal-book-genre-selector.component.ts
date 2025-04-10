@@ -15,6 +15,7 @@ import { GenreService } from '../../../services/genre.service';
 export class ModalBookGenreSelectorComponent implements OnInit {
   @Input() selectedGenres: any[] = [];
   @Output() genreSelected = new EventEmitter<any[]>();
+  @Output() genresIdSelected = new EventEmitter<number[]>();
 
   filteredGenres: Genre[] = [];
   searchTerm = '';
@@ -56,7 +57,7 @@ export class ModalBookGenreSelectorComponent implements OnInit {
     if (isChecked) {
       if (!this.isGenreSelected(genre)) {
         this.selectedGenres.push(genre);
-        this.genreSelected.emit([...this.selectedGenres]);
+        this.emitSelectionEvents();
       }
     } else {
       this.removeGenre(genre);
@@ -68,11 +69,20 @@ export class ModalBookGenreSelectorComponent implements OnInit {
 
       if (index > -1) {
         this.selectedGenres.splice(index, 1);
-        this.genreSelected.emit([...this.selectedGenres]);
+        this.emitSelectionEvents();
       }
   }
 
   isGenreSelected(genre: Genre): boolean {
       return this.selectedGenres.some(a => a.genreID === genre.genreID);
+  }
+
+  private emitSelectionEvents() {
+    // Emite o array completo de autores
+    this.genreSelected.emit([...this.selectedGenres]);
+
+    // Emite apenas os IDs dos autores selecionados
+    const genreIds = this.selectedGenres.map(genre => genre.genreID);
+    this.genresIdSelected.emit(genreIds);
   }
 }

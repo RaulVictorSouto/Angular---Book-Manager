@@ -28,29 +28,49 @@ import { BookService } from '../../../services/book.service';
    isEditMode = false;
 
 
-   constructor(private fb: FormBuilder, private bookService: BookService) {
+  constructor(private fb: FormBuilder, private bookService: BookService) {
      this.bookForm = this.fb.group({
        title: ['', Validators.required],
        language: ['', Validators.required],
        publisher: ['', Validators.required],
        isbn: ['', Validators.required],
        rating: ['', Validators.required],
-       authors: [''],
-       genders: [''],
-       tags: [''],
+       authors: [[]],
+       genres: [[]],
+       tags: [[]],
        coverPage: ['']
      });
    }
 
    closeModal(): void{
-    debugger;
     this.close.emit();
-    this.bookForm.reset();
+    this.bookForm.reset({
+      authors: [],
+      genres: []
+    });
     this.errorMessage = '';
    }
 
+  // Métodos para atualizar o form com os dados dos componentes filhos
+  onAuthorsSelected(authorIds: number[]) {
+    this.bookForm.patchValue({
+      authors: authorIds
+    });
+  }
+
+  onGenresSelected(genreIds: number[]) {
+    this.bookForm.patchValue({
+      genres: genreIds
+    });
+  }
+
+  onTagsSelected(tags: string[]) {
+    this.bookForm.patchValue({
+      tags: tags
+    });
+  }
+
    onSubmit(): void {
-    debugger;
      if (this.bookForm.valid) {
        this.isLoading = true;
        this.errorMessage = '';
@@ -61,8 +81,8 @@ import { BookService } from '../../../services/book.service';
         bookPublisher: this.bookForm.value.publisher,
         bookISBN: this.bookForm.value.isbn,
         bookRating: this.bookForm.value.rating,
-        authorsIDs: this.bookForm.value.authors || [],
-        gendersIDS: this.bookForm.value.genders || [],
+        authorIDs: this.bookForm.value.authors,
+        genreIDS: this.bookForm.value.genres,
         bookTags: this.bookForm.value.tags || [],
         bookCoverPage: this.selectedFile || "",
        }

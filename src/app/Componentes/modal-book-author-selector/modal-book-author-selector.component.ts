@@ -15,6 +15,7 @@ import { NgFor } from '@angular/common';
 export class ModalBookAuthorSelectorComponent implements OnInit {
   @Input() selectedAuthors: any[] = []; // Autores pré-selecionados
   @Output() authorsSelected = new EventEmitter<any[]>(); // Emite a lista atualizada
+  @Output() authorsIdSelected = new EventEmitter<number[]>();
 
   filteredAuthors: Author[] = [];
   searchTerm = '';
@@ -56,7 +57,7 @@ export class ModalBookAuthorSelectorComponent implements OnInit {
       // Se estiver marcando, adiciona o autor
       if (!this.isAuthorSelected(author)) {
         this.selectedAuthors.push(author);
-        this.authorsSelected.emit([...this.selectedAuthors]);
+        this.emitSelectionEvents();
       }
     } else {
       // Se estiver desmarcando, remove o autor
@@ -69,11 +70,20 @@ export class ModalBookAuthorSelectorComponent implements OnInit {
 
     if (index > -1) {
       this.selectedAuthors.splice(index, 1);
-      this.authorsSelected.emit([...this.selectedAuthors]);
+      this.emitSelectionEvents();
     }
   }
 
   isAuthorSelected(author: Author): boolean {
     return this.selectedAuthors.some(a => a.authorID === author.authorID);
+  }
+
+  private emitSelectionEvents() {
+    // Emite o array completo de autores
+    this.authorsSelected.emit([...this.selectedAuthors]);
+
+    // Emite apenas os IDs dos autores selecionados
+    const authorIds = this.selectedAuthors.map(author => author.authorID);
+    this.authorsIdSelected.emit(authorIds);
   }
 }

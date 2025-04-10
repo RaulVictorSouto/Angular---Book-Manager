@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
 
@@ -10,6 +10,8 @@ import { NgFor } from '@angular/common';
   styleUrl: './modal-book-tags.component.css'
 })
 export class ModalBookTagsComponent {
+  @Output() tagAdded = new EventEmitter<string[]>();
+
   tags: string[] = [];
   tagInput: string = '';
 
@@ -21,12 +23,14 @@ export class ModalBookTagsComponent {
 
     if (tag && !this.tags.includes(tag)) {
       this.tags.push(tag);
-      this.tagInput = ''; // Limpa o input
+      this.tagInput = '';
+      this.tagAdded.emit([...this.tags]);
     }
   }
 
   // Método para remover tag
   removeTag(index: number) {
     this.tags.splice(index, 1);
+    this.tagAdded.emit([...this.tags]);
   }
 }
