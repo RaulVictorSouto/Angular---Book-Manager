@@ -28,7 +28,9 @@ export class DisplayBookComponent {
   }
 
   getCoverImage(): string {
-    return this.book?.bookCoverPage || '../../assets/images/cover.jpg';
+    return this.book?.bookCoverPage
+      ? 'data:image/png;base64,' + this.book.bookCoverPage
+      : '../../assets/images/cover.jpg';
   }
 
   openDetailModal(book: Book) {
