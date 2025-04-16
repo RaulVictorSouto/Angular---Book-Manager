@@ -57,8 +57,15 @@
       </div>
 
       <div class="grid grid-cols-2 gap-4">
-        <app-modal-book-author-selector (authorsIdSelected)="onAuthorsSelected($event)"></app-modal-book-author-selector>
-        <app-modal-book-genre-selector (genresIdSelected)="onGenresSelected($event)"></app-modal-book-genre-selector>
+        <app-modal-book-author-selector
+          [selectedAuthors]="bookAuthors"
+          (authorsIdSelected)="onAuthorsSelected($event)">
+        </app-modal-book-author-selector>
+
+        <app-modal-book-genre-selector
+          [selectedGenres]="bookGenres"
+          (genresIdSelected)="onGenresSelected($event)">
+        </app-modal-book-genre-selector>
       </div>
 
       <div class="grid grid-cols-1 gap-4">

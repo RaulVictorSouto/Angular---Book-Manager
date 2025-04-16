@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ModalBookAuthorSelectorComponent } from "../modal-book-author-selector/modal-book-author-selector.component";
 import { ModalBookGenreSelectorComponent } from "../modal-book-genre-selector/modal-book-genre-selector.component";
@@ -26,6 +26,8 @@ import { BookService } from '../../../services/book.service';
    errorMessage: string | null = null;
    successMessage: string | null = null;
    isEditMode = false;
+   bookGenres: any[] = [];
+   bookAuthors: any[] = [];
 
 
   constructor(private fb: FormBuilder, private bookService: BookService) {
@@ -42,14 +44,24 @@ import { BookService } from '../../../services/book.service';
      });
    }
 
-   closeModal(): void{
+   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['isOpen'] && this.isOpen && this.bookID) {
+      this.isEditMode = true;
+      this.loadBookForEdit(this.bookID);
+    }
+  }
+
+   closeModal(): void {
     this.close.emit();
     this.bookForm.reset({
       authors: [],
-      genres: []
+      genres: [],
+      tags: []
     });
     this.errorMessage = '';
-   }
+    this.isEditMode = false;
+    this.bookID = null;
+  }
 
   // Métodos para atualizar o form com os dados dos componentes filhos
   onAuthorsSelected(authorIds: number[]) {
@@ -82,13 +94,13 @@ import { BookService } from '../../../services/book.service';
         bookISBN: this.bookForm.value.isbn,
         bookRating: this.bookForm.value.rating,
         authorIDs: this.bookForm.value.authors || [],
-        genreIDS: this.bookForm.value.genres || [],
+        genreIDs: this.bookForm.value.genres || [],
         bookTags: this.bookForm.value.tags || [],
         bookCoverPage: this.bookForm.value.coverPage || null
       };
 
       if (this.isEditMode && this.bookID) {
-        this.updateBook();
+        this.updateBook(this.bookID, bookPayload);
       } else {
         this.createBook(bookPayload);
       }
@@ -96,7 +108,6 @@ import { BookService } from '../../../services/book.service';
   }
 
    createBook(bookData: any): void{
-    debugger;
     this.bookService.createBook(bookData).subscribe({
       next: (newBook) => {
         this.isLoading = false;
@@ -108,10 +119,6 @@ import { BookService } from '../../../services/book.service';
         this.handleError('Erro ao cadastrar gênero', error);
       }
     });
-   }
-
-   updateBook(){
-
    }
 
   private handleError(message: string, error: any): void {
@@ -156,6 +163,51 @@ import { BookService } from '../../../services/book.service';
 
       reader.readAsDataURL(this.selectedFile);
     }
+  }
+
+
+  //para edição
+
+  updateBook(bookID: number, bookData: any){
+    debugger;
+    this.bookService.updateBook(bookID, bookData).subscribe({
+      next: (updatedBook) => {
+        this.isLoading = false;
+        this.submitBook.emit(updatedBook);
+        this.bookService.notifyBookCreatedOrUpdated();
+        this.closeModal();
+      },
+      error: (error) => {
+        this.handleError('Erro ao atualizar o livro', error);
+      }
+    });
+  }
+
+
+  loadBookForEdit(bookID: number): void {
+    debugger;
+    this.isLoading = true;
+    this.bookService.getBookById(bookID).subscribe({
+      next: (book) => {
+        this.bookForm.patchValue({
+          title: book.bookTitle,
+          language: book.bookLanguage,
+          publisher: book.bookPublisher,
+          isbn: book.bookISBN,
+          rating: book.bookRating,
+          authors: book.authors.map((a: any) => a.authorID),
+          genres: book.genres.map((g: any) => g.genreID),
+          // tags: book.bookTagsList,
+          coverPage: book.bookCoverPage || ''
+        });
+        this.bookGenres = book.genres;
+        this.bookAuthors = book.authors;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.handleError('Erro ao carregar livro', error);
+      }
+    });
   }
 
 

@@ -29,8 +29,9 @@ export class BookService{
   }
 
   //PUT
-  updateBook(bookID: number, bookData: FormData): Observable<Book> {
-    return this.http.put<Book>(`${this.apiUrl}/${bookID}`, bookData);
+  updateBook(bookID: number, formData: FormData): Observable<Book> {
+    debugger;
+    return this.http.put<Book>(`${this.apiUrl}/${bookID}`, formData);
   }
 
   //DELETE

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { Author } from '../../../models/author.model';
 import { AuthorService } from '../../../services/author.service';
 import { FormsModule } from '@angular/forms';
@@ -12,14 +12,14 @@ import { NgFor } from '@angular/common';
   styleUrl: './modal-book-author-selector.component.css'
 })
 
-export class ModalBookAuthorSelectorComponent implements OnInit {
-  @Input() selectedAuthors: any[] = []; // Autores pré-selecionados
-  @Output() authorsSelected = new EventEmitter<any[]>(); // Emite a lista atualizada
+export class ModalBookAuthorSelectorComponent implements OnInit, OnChanges {
+  @Input() selectedAuthors: Author[] = []; // Autores pré-selecionados
   @Output() authorsIdSelected = new EventEmitter<number[]>();
 
   filteredAuthors: Author[] = [];
   searchTerm = '';
   loading = true;
+  allAuthors: Author[] = [];
 
   constructor(private authorService: AuthorService){}
 
@@ -27,9 +27,16 @@ export class ModalBookAuthorSelectorComponent implements OnInit {
     this.loadAuthors();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['selectedAuthors'] && this.selectedAuthors) {
+      this.updateFilteredAuthors();
+    }
+  }
+
   loadAuthors() {
     this.authorService.getAuthor().subscribe({
       next: (authors) => {
+        this.allAuthors = authors,
         this.filteredAuthors = authors;
         this.loading = false;
       },
@@ -42,9 +49,9 @@ export class ModalBookAuthorSelectorComponent implements OnInit {
 
   filterAuthors() {
     if (!this.searchTerm) {
-      this.loadAuthors();
+      this.filteredAuthors = [...this.allAuthors];
     } else {
-      this.filteredAuthors = this.filteredAuthors.filter(author =>
+      this.filteredAuthors = this.allAuthors.filter(author =>
         author.authorName.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     }
@@ -79,11 +86,15 @@ export class ModalBookAuthorSelectorComponent implements OnInit {
   }
 
   private emitSelectionEvents() {
-    // Emite o array completo de autores
-    this.authorsSelected.emit([...this.selectedAuthors]);
-
-    // Emite apenas os IDs dos autores selecionados
     const authorIds = this.selectedAuthors.map(author => author.authorID);
     this.authorsIdSelected.emit(authorIds);
+  }
+
+  private updateFilteredAuthors() {
+    if (this.searchTerm) {
+      this.filterAuthors();
+    } else {
+      this.filteredAuthors = [...this.allAuthors];
+    }
   }
 }

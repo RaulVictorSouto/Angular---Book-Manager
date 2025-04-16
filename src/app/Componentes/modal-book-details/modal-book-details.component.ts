@@ -2,11 +2,12 @@ import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/
 import { BookService } from '../../../services/book.service';
 import { Book } from '../../../models/book.model';
 import { CommonModule } from '@angular/common';
+import { ModalBookComponent } from '../modal-book/modal-book.component';
 
 @Component({
   selector: 'app-modal-book-details',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ModalBookComponent],
   templateUrl: './modal-book-details.component.html',
   styleUrl: './modal-book-details.component.css'
 })
@@ -21,6 +22,7 @@ export class ModalBookDetailsComponent {
   loading: boolean = false;
   bookToDelete: number | null = null;
   showDeleteModal = false;
+  showEditModal = false;
 
   constructor(private bookService: BookService) {}
 
@@ -69,6 +71,12 @@ export class ModalBookDetailsComponent {
     return this.book.bookTagsList.join(', ');
   }
 
+  getCoverImage(): string {
+    return this.book?.bookCoverPage
+      ? 'data:image/png;base64,' + this.book.bookCoverPage
+      : '../../assets/images/cover.jpg';
+  }
+
 
   //para exclusão
   openDeleteModal(bookID: number): void {
@@ -95,5 +103,18 @@ export class ModalBookDetailsComponent {
         error: (err) => console.error('Erro ao deletar gênero', err)
       });
     }
+  }
+
+
+  //para edição
+  openEditModal(): void {
+    this.showEditModal = true;
+    this.isVisible = false;
+  }
+
+  handleBookUpdated(updatedBook: Book) {
+    this.book = updatedBook;
+    this.showEditModal = false;
+    this.isVisible = true;
   }
 }

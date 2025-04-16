@@ -1,6 +1,7 @@
 import { Genre } from '../models/genre.model';
 import { Author } from '../models/author.model';
 export interface Book {
+  bookTags: never[];
   bookID: number;
   bookTitle: string;
   bookLanguage: string;
