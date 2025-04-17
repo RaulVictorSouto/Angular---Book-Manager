@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, Input, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgFor } from '@angular/common';
 
@@ -10,10 +10,17 @@ import { NgFor } from '@angular/common';
   styleUrl: './modal-book-tags.component.css'
 })
 export class ModalBookTagsComponent {
+  @Input() initialTags: string[] = [];
   @Output() tagAdded = new EventEmitter<string[]>();
 
   tags: string[] = [];
   tagInput: string = '';
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['initialTags']) {
+      this.tags = [...this.initialTags];
+    }
+  }
 
   // Método para adicionar tag
   addTag(event: Event) {

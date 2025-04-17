@@ -69,7 +69,10 @@
       </div>
 
       <div class="grid grid-cols-1 gap-4">
-        <app-modal-book-tags (tagAdded)="onTagsSelected($event)"></app-modal-book-tags>
+        <app-modal-book-tags
+          [initialTags]="bookForm.value.tags"
+          (tagAdded)="onTagsSelected($event)">
+        </app-modal-book-tags>
       </div>
 
       <div class="grid grid-cols-1 gap-4">

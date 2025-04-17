@@ -197,7 +197,7 @@ import { BookService } from '../../../services/book.service';
           rating: book.bookRating,
           authors: book.authors.map((a: any) => a.authorID),
           genres: book.genres.map((g: any) => g.genreID),
-          // tags: book.bookTagsList,
+          tags: book.bookTagsList || [],
           coverPage: book.bookCoverPage || ''
         });
         this.bookGenres = book.genres;
