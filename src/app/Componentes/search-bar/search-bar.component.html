@@ -2,6 +2,8 @@
   <div class="flex items-center">
     <input
       type="text"
+      [(ngModel)]="searchTerm"
+      (ngModelChange)="onSearch()"
       placeholder="Buscar..."
       class="w-full py-2 px-4 focus:outline-none bg-transparent rounded-full"
     >

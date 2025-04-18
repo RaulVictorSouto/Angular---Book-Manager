@@ -39,6 +39,16 @@ export class BookService{
     return this.http.delete<void>(`${this.apiUrl}/${bookID}`);
   }
 
+  //PESQUISA LIVROS E TAGS
+  search(title?: string, tags?: string): Observable<Book[]>{
+    let params: any = {};
+
+    if(title){params.title = title;}
+    if(tags){params.tags = tags;}
+
+    return this.http.get<Book[]>(`${this.apiUrl}` + '/search' , {params});
+  }
+
 
   //para atualizar a lista de livros
   bookCreated$ = this.bookCreatedSource.asObservable();

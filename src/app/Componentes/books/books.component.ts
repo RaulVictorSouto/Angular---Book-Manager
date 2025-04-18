@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BookService } from '../../../services/book.service';
-import { Book } from '../../../models/book.model'
+import { Book } from '../../../models/book.model';
 import { DisplayBookComponent } from "../display-book/display-book.component";
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { SharedDataService } from '../../../services/shared-data.service';
 
 @Component({
   selector: 'app-books',
@@ -12,54 +13,63 @@ import { Subscription } from 'rxjs';
   templateUrl: './books.component.html',
   styleUrl: './books.component.css'
 })
-
-export class BooksComponent {
+export class BooksComponent implements OnInit, OnDestroy {
   books: Book[] = [];
+  filteredBooks: Book[] = [];
   loading = true;
   showBookList = true;
-  selectedBook: any = null;
-  private bookSubscription!: Subscription;
+  isSearching = false;
+  private subscriptions: Subscription[] = [];
 
-
-  constructor(private bookService: BookService){}
+  constructor(
+    private bookService: BookService,
+    private sharedDataService: SharedDataService
+  ) {}
 
   ngOnInit(): void {
     this.loadBooks();
 
-    this.bookSubscription = this.bookService.bookCreated$.subscribe(() => {
-      this.loadBooks();
-    })
+    this.subscriptions.push(
+      this.sharedDataService.currentSearchResults.subscribe(books => {
+        this.handleSearchResults(books);
+      })
+    );
+
+    this.subscriptions.push(
+      this.bookService.bookCreated$.subscribe(() => {
+        this.loadBooks();
+      })
+    );
   }
 
   ngOnDestroy(): void {
-    this.bookSubscription.unsubscribe();
+    this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
   loadBooks(): void {
+    debugger;
+    this.loading = true;
     this.bookService.getBook().subscribe({
       next: (books) => {
         this.books = books;
+        this.filteredBooks = books;
         this.loading = false;
       },
       error: (err) => {
-        console.error('Erro detalhado:', {
-          message: err.message,
-          status: err.status,
-          url: err.url,
-          error: err.error
-        });
+        console.error('Erro ao carregar livros:', err);
         this.loading = false;
       }
     });
   }
 
-  onBookDeleted(): void {
-    this.loadBooks();
-    this.selectedBook = null;
-    this.showBookList = true;
+  handleSearchResults(books: Book[]): void {
+    this.isSearching = true;
+    this.filteredBooks = books;
+    this.showBookList = books.length > 0;
   }
 
-  onBookCreated() {
+  onBookDeleted(): void {
     this.loadBooks();
+    this.isSearching = false;
   }
 }
