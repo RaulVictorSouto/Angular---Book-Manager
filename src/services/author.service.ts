@@ -39,6 +39,12 @@ export class AuthorService{
     return this.http.put<Author>(`${this.apiUrl}/${authorID}`, authorData);
   }
 
+    //PESQUISA AUTORES
+    searchAuthor(name?: string): Observable<Author[]>{
+      let params: any = {};
+      if(name){params.name = name;}
+      return this.http.get<Author[]>(`${this.apiUrl}` + '/search' , {params});
+    }
 
 
 

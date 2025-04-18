@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { PaginationComponent } from "../pagination/pagination.component";
 import { Subscription } from 'rxjs';
 import { ModalAuthorComponent } from "../modal-author/modal-author.component";
+import { SharedDataService } from '../../../services/shared-data.service';
 
 @Component({
   selector: 'app-authors',
@@ -15,39 +16,52 @@ import { ModalAuthorComponent } from "../modal-author/modal-author.component";
 })
 export class AuthorsComponent {
   authors: Author[] = [];
+  filteredAuthors: Author[] = [];
   loading = true;
-  //showModal = false;
   showEditModal = false;
-  private authorSubscription!: Subscription;
   showDeleteModal = false;
   authorToDelete: number | null = null;
   currentAuthorID: number | null = null;
+  isSearching = false;
+
+  private authorSubscriptions: Subscription[] = [];
 
   // Paginação
-  paginatedAuthors: any[] = [];
+  paginatedAuthors: Author[] = [];
   currentPage = 1;
   itemsPerPage = 10;
   totalItems = 0;
 
-  constructor(private authorService: AuthorService) { }
+  constructor(
+    private authorService: AuthorService,
+    private sharedDataService: SharedDataService
+  ) {}
 
   ngOnInit(): void {
-    this.loadAuthor();
+    this.loadAuthors();
 
-    this.authorSubscription = this.authorService.authorCreated$.subscribe(() => {
-      this.loadAuthor();
-    });
+    this.authorSubscriptions.push(
+      this.sharedDataService.currentAuthorResults?.subscribe(authors => {
+        this.handleSearchResults(authors);
+      })
+    );
+
+    this.authorSubscriptions.push(
+      this.authorService.authorCreated$.subscribe(() => {
+        this.loadAuthors();
+      })
+    );
   }
 
   ngOnDestroy(): void {
-    this.authorSubscription.unsubscribe();
+    this.authorSubscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  //para edição
-  loadAuthor(): void {
+  loadAuthors(): void {
     this.authorService.getAuthor().subscribe({
       next: (data) => {
         this.authors = data;
+        this.filteredAuthors = data;
         this.totalItems = data.length;
         this.updatePaginatedAuthors();
         this.loading = false;
@@ -62,7 +76,7 @@ export class AuthorsComponent {
   updatePaginatedAuthors(): void {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedAuthors = this.authors.slice(startIndex, endIndex);
+    this.paginatedAuthors = this.filteredAuthors.slice(startIndex, endIndex);
   }
 
   onPageChange(page: number): void {
@@ -80,8 +94,6 @@ export class AuthorsComponent {
     this.currentAuthorID = null;
   }
 
-
-//para exclusão
   openDeleteModal(authorID: number): void {
     this.authorToDelete = authorID;
     this.showDeleteModal = true;
@@ -97,12 +109,14 @@ export class AuthorsComponent {
       this.authorService.deleteAuthor(this.authorToDelete).subscribe({
         next: () => {
           this.authors = this.authors.filter(author => author.authorID !== this.authorToDelete);
-          this.totalItems = this.authors.length;
+          this.filteredAuthors = this.filteredAuthors.filter(author => author.authorID !== this.authorToDelete);
+          this.totalItems = this.filteredAuthors.length;
 
           const totalPages = Math.ceil(this.totalItems / this.itemsPerPage);
           if (this.currentPage > totalPages) {
             this.currentPage = Math.max(totalPages, 1);
           }
+
           this.updatePaginatedAuthors();
           this.showDeleteModal = false;
           this.authorToDelete = null;
@@ -110,5 +124,13 @@ export class AuthorsComponent {
         error: (err) => console.error('Erro ao deletar autor', err)
       });
     }
+  }
+
+  handleSearchResults(authors: Author[]): void {
+    this.isSearching = true;
+    this.filteredAuthors = authors;
+    this.totalItems = authors.length;
+    this.currentPage = 1;
+    this.updatePaginatedAuthors();
   }
 }

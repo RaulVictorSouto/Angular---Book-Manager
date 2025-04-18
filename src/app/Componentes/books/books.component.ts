@@ -30,7 +30,7 @@ export class BooksComponent implements OnInit, OnDestroy {
     this.loadBooks();
 
     this.subscriptions.push(
-      this.sharedDataService.currentSearchResults.subscribe(books => {
+      this.sharedDataService.currentBookResults.subscribe(books => {
         this.handleSearchResults(books);
       })
     );
@@ -47,7 +47,6 @@ export class BooksComponent implements OnInit, OnDestroy {
   }
 
   loadBooks(): void {
-    debugger;
     this.loading = true;
     this.bookService.getBook().subscribe({
       next: (books) => {

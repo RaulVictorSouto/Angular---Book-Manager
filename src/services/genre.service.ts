@@ -38,6 +38,13 @@ export class GenreService{
     return this.http.delete<void>(`${this.apiUrl}/${genreID}`);
   }
 
+    //PESQUISA AUTORES
+      searchGenre(name?: string): Observable<Genre[]>{
+        let params: any = {};
+        if(name){params.name = name;}
+        return this.http.get<Genre[]>(`${this.apiUrl}` + '/search' , {params});
+      }
+
 
 
   //para atualizar a lista de generos

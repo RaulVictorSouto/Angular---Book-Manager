@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { PaginationComponent } from "../pagination/pagination.component";
 import { Subscription } from 'rxjs';
 import { ModalGenreComponent } from '../modal-genre/modal-genre.component';
+import { SharedDataService } from '../../../services/shared-data.service';
 
 @Component({
   selector: 'app-genres',
@@ -15,12 +16,15 @@ import { ModalGenreComponent } from '../modal-genre/modal-genre.component';
 })
 export class GenresComponent {
   genres: Genre[] = [];
+  filteredGenres: Genre[] = [];
   loading = true;
-  private genreSubscription!: Subscription;
+  private genreSubscription: Subscription[] = [];
   showEditModal = false;
   currentGenreID: number | null = null;
   showDeleteModal = false;
   genreToDelete: number | null = null;
+  isSearching = false;
+  showGenreList = true;
 
   //paginação
   paginatedGenres: any[] = [];
@@ -28,18 +32,29 @@ export class GenresComponent {
   itemsPerPage = 10;
   totalItems = 0;
 
-  constructor(private genreService: GenreService) { }
+  constructor(
+    private genreService: GenreService,
+    private sharedDataService: SharedDataService
+  ) { }
 
   ngOnInit(): void {
     this.loadGenres();
 
-    this.genreSubscription = this.genreService.genreCreated$.subscribe(() => {
-      this.loadGenres();
-    })
+    this.genreSubscription.push(
+      this.sharedDataService.currentGenreResults.subscribe(genres => {
+        this.handleSearchResults(genres);
+      })
+    );
+
+    this.genreSubscription.push(
+      this.genreService.genreCreated$.subscribe(() => {
+        this.loadGenres();
+      })
+    );
   }
 
   ngOnDestroy(): void {
-    this.genreSubscription.unsubscribe();
+    this.genreSubscription.forEach(sub => sub.unsubscribe());
   }
 
   //para edição
@@ -48,7 +63,7 @@ export class GenresComponent {
     debugger;
     this.genreService.getGenre().subscribe({
       next: (data) => {
-        this.genres = data;
+        this.filteredGenres = data;
         this.totalItems = data.length;
         this.updatePaginatedGenres();
         this.loading = false;
@@ -63,7 +78,7 @@ export class GenresComponent {
   updatePaginatedGenres(): void {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedGenres = this.genres.slice(startIndex, endIndex);
+    this.paginatedGenres = this.filteredGenres.slice(startIndex, endIndex);
   }
 
   onPageChange(page: number): void {
@@ -111,4 +126,16 @@ export class GenresComponent {
       });
     }
   }
+
+
+  handleSearchResults(genres: Genre[]): void {
+    this.isSearching = true;
+    this.filteredGenres = genres;
+    this.totalItems = genres.length;
+    this.currentPage = 1;
+    this.updatePaginatedGenres();
+    this.showGenreList = genres.length > 0;
+  }
+
+
 }
