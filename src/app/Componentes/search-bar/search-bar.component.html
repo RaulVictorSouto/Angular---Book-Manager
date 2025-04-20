@@ -2,16 +2,18 @@
   <div class="flex items-center space-x-2">
     <!-- ComboBox de campo -->
     <select
+      *ngIf="searchType === 'books'"
       [(ngModel)]="searchField"
       (change)="onSearch()"
-      class="bg-transparent text-gray-600 focus:outline-none px-2"
+      class="bg-transparent md:text-gray-600 focus:outline-none px-2 text-gray-100"
     >
-      <option value="title">Título</option>
-      <option value="author">Autor</option>
-      <option value="isbn">ISBN</option>
-      <option value="language">Idioma</option>
-      <option value="publisher">Editora</option>
-      <option value="genre">Gênero</option>
+      <option value="title" class="text-gray-600">Título</option>
+      <option value="author" class="text-gray-600">Autor</option>
+      <option value="isbn" class="text-gray-600">ISBN</option>
+      <option value="language" class="text-gray-600">Idioma</option>
+      <option value="publisher" class="text-gray-600">Editora</option>
+      <option value="genre" class="text-gray-600">Gênero</option>
+      <option value="tags" class="text-gray-600">Tags</option>
     </select>
 
     <!-- Campo de texto -->

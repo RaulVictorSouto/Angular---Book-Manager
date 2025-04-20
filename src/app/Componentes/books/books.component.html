@@ -1,18 +1,28 @@
-  <!-- Spinner de Carregamento -->
-  <div *ngIf="loading" class="flex justify-center items-center h-64">
-    <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-sky-500"></div>
-  </div>
+<!-- Spinner de Carregamento -->
+<div *ngIf="loading" class="flex justify-center items-center h-64">
+  <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-sky-500"></div>
+</div>
 
 <!-- Lista de livros -->
 <div *ngIf="showBookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-8">
   <app-display-book
-    *ngFor="let book of filteredBooks"
+    *ngFor="let book of filteredBooksToShow"
     [book]="book"
     (bookDeleted)="onBookDeleted()"
   ></app-display-book>
 </div>
 
- <!-- Mensagem quando não há livros -->
- <div *ngIf="!loading && books.length === 0" class="text-center py-12">
+<!-- Botão "Ver mais" -->
+<div *ngIf="visibleBooks < filteredBooks.length && !loading" class="text-center mt-6">
+  <button
+    (click)="showMoreBooks()"
+    class="bg-blue-600 hover:bg-sky-600 text-white font-semibold py-2 px-8 rounded-full transition-colors"
+  >
+    Ver mais
+  </button>
+</div>
+
+<!-- Mensagem quando não há livros -->
+<div *ngIf="!loading && filteredBooks.length === 0" class="text-center py-12">
   <div class="text-gray-500">Nenhum livro encontrado</div>
 </div>

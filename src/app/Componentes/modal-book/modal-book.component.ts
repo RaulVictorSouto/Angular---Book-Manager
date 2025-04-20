@@ -96,7 +96,7 @@ import { BookService } from '../../../services/book.service';
         authorIDs: this.bookForm.value.authors || [],
         genreIDs: this.bookForm.value.genres || [],
         bookTags: this.bookForm.value.tags || [],
-        bookCoverPage: this.bookForm.value.coverPage || null
+        bookCoverPage: this.bookForm.value.coverPage || ''
       };
 
       if (this.isEditMode && this.bookID) {
@@ -169,7 +169,6 @@ import { BookService } from '../../../services/book.service';
   //para edição
 
   updateBook(bookID: number, bookData: any){
-    debugger;
     this.bookService.updateBook(bookID, bookData).subscribe({
       next: (updatedBook) => {
         this.isLoading = false;
@@ -185,7 +184,6 @@ import { BookService } from '../../../services/book.service';
 
 
   loadBookForEdit(bookID: number): void {
-    debugger;
     this.isLoading = true;
     this.bookService.getBookById(bookID).subscribe({
       next: (book) => {

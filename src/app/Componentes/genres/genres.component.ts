@@ -60,7 +60,6 @@ export class GenresComponent {
   //para edição
 
   loadGenres(): void {
-    debugger;
     this.genreService.getGenre().subscribe({
       next: (data) => {
         this.filteredGenres = data;

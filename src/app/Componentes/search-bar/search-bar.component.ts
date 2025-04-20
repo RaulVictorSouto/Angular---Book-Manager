@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BookService } from '../../../services/book.service';
 import { AuthorService } from '../../../services/author.service';
@@ -15,10 +15,13 @@ import { RouteService } from '../../../services/route.services';
   styleUrl: './search-bar.component.css'
 })
 export class SearchBarComponent implements OnInit {
+  @Input() mobileVersion = false;
+
   loading: boolean = false;
   searchType: 'books' | 'authors' | 'genres' = 'books';
   searchTerm: string = '';
   searchField: string = 'title';
+  menuOpen = false;
 
   constructor(
     private bookService: BookService,
@@ -29,10 +32,13 @@ export class SearchBarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const initialRoute = this.routeService.getCurrentRoute();
+    this.setSearchType(initialRoute);
     this.onSearch();
-    this.setSearchType(this.routeService.getCurrentRoute());
+
     this.routeService.currentRoute$.subscribe(route => {
       this.setSearchType(route);
+      this.onSearch();
     });
   }
 
@@ -57,8 +63,7 @@ export class SearchBarComponent implements OnInit {
             this.sharedDataService.updateSearchBookResults(books);
             this.loading = false;
           },
-          error: (err) => {
-            console.error('Erro ao buscar livros:', err);
+          error: () => {
             this.loading = false;
           }
         });
@@ -70,8 +75,7 @@ export class SearchBarComponent implements OnInit {
             this.sharedDataService.updateSearchAuthorResults(authors);
             this.loading = false;
           },
-          error: (err) => {
-            console.error('Erro ao buscar autores:', err);
+          error: () => {
             this.loading = false;
           }
         });
@@ -83,13 +87,16 @@ export class SearchBarComponent implements OnInit {
             this.sharedDataService.updateSearchGenreResults(genres);
             this.loading = false;
           },
-          error: (err) => {
-            console.error('Erro ao buscar gêneros:', err);
+          error: () => {
             this.loading = false;
           }
         });
         break;
     }
+  }
+
+  toggleMenu() {
+    this.menuOpen = !this.menuOpen;
   }
 
 }

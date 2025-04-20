@@ -19,6 +19,7 @@ export class BooksComponent implements OnInit, OnDestroy {
   loading = true;
   showBookList = true;
   isSearching = false;
+  visibleBooks: number = 10; // Quantos livros serão mostrados inicialmente
   private subscriptions: Subscription[] = [];
 
   constructor(
@@ -52,6 +53,7 @@ export class BooksComponent implements OnInit, OnDestroy {
       next: (books) => {
         this.books = books;
         this.filteredBooks = books;
+        this.visibleBooks = 10; // Reinicia a contagem visível ao carregar
         this.loading = false;
       },
       error: (err) => {
@@ -64,11 +66,20 @@ export class BooksComponent implements OnInit, OnDestroy {
   handleSearchResults(books: Book[]): void {
     this.isSearching = true;
     this.filteredBooks = books;
+    this.visibleBooks = 10; // Reinicia visibilidade ao pesquisar
     this.showBookList = books.length > 0;
   }
 
   onBookDeleted(): void {
     this.loadBooks();
     this.isSearching = false;
+  }
+
+  get filteredBooksToShow(): Book[] {
+    return this.filteredBooks.slice(0, this.visibleBooks);
+  }
+
+  showMoreBooks(): void {
+    this.visibleBooks += 10;
   }
 }

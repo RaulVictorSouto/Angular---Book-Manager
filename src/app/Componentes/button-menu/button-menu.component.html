@@ -1,17 +1,14 @@
-<div flex flex-row gap-4>
+<div class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2">
   <button class="text-gray px-4 py-2 rounded border border-white/30 transition-all
-                hover:bg-white/10 hover:border-sky-500"
-                [routerLink]="['/livros']">
+    hover:bg-white/10 hover:border-sky-500" [routerLink]="['/livros']">
         Livros
   </button>
   <button class="text-gray px-4 py-2 rounded border border-white/30 transition-all
-    hover:bg-white/10 hover:border-sky-500"
-    [routerLink]="['/generos']">
+    hover:bg-white/10 hover:border-sky-500" [routerLink]="['/generos']">
         Gêneros
   </button>
   <button class="text-gray px-4 py-2 rounded border border-white/30 transition-all
-    hover:bg-white/10 hover:border-sky-500"
-    [routerLink]="['/autores']">
+    hover:bg-white/10 hover:border-sky-500" [routerLink]="['/autores']">
         Autores
   </button>
 </div>

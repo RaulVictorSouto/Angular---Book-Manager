@@ -30,6 +30,7 @@ export class BookService{
 
   //PUT
   updateBook(bookID: number, formData: FormData): Observable<Book> {
+    debugger;
     return this.http.put<Book>(`${this.apiUrl}/${bookID}`, formData);
   }
 
