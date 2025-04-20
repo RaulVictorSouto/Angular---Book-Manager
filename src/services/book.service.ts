@@ -30,7 +30,6 @@ export class BookService{
 
   //PUT
   updateBook(bookID: number, formData: FormData): Observable<Book> {
-    debugger;
     return this.http.put<Book>(`${this.apiUrl}/${bookID}`, formData);
   }
 
@@ -40,10 +39,8 @@ export class BookService{
   }
 
   //PESQUISA LIVROS
-  searchBook(title?: string): Observable<Book[]>{
-    let params: any = {};
-    if(title){params.title = title;}
-    return this.http.get<Book[]>(`${this.apiUrl}` + '/search' , {params});
+  searchBook(field?: string, value?: string): Observable<Book[]> {
+    return this.http.get<Book[]>(`${this.apiUrl}/search?field=${field}&value=${value}`);
   }
 
 

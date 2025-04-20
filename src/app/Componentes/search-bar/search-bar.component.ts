@@ -15,9 +15,10 @@ import { RouteService } from '../../../services/route.services';
   styleUrl: './search-bar.component.css'
 })
 export class SearchBarComponent implements OnInit {
-  searchTerm: string = '';
   loading: boolean = false;
   searchType: 'books' | 'authors' | 'genres' = 'books';
+  searchTerm: string = '';
+  searchField: string = 'title';
 
   constructor(
     private bookService: BookService,
@@ -51,7 +52,7 @@ export class SearchBarComponent implements OnInit {
 
     switch (this.searchType) {
       case 'books':
-        this.bookService.searchBook(this.searchTerm).subscribe({
+        this.bookService.searchBook(this.searchField, this.searchTerm).subscribe({
           next: (books) => {
             this.sharedDataService.updateSearchBookResults(books);
             this.loading = false;
@@ -90,5 +91,6 @@ export class SearchBarComponent implements OnInit {
         break;
     }
   }
+
 }
 
