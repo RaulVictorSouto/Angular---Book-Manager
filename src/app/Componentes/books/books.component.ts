@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { BookService } from '../../../services/book.service';
 import { Book } from '../../../models/book.model';
 import { DisplayBookComponent } from "../display-book/display-book.component";
@@ -16,7 +16,7 @@ import { SharedDataService } from '../../../services/shared-data.service';
 export class BooksComponent implements OnInit, OnDestroy {
   books: Book[] = [];
   filteredBooks: Book[] = [];
-  loading = true;
+  loading = false;
   showBookList = true;
   isSearching = false;
   visibleBooks: number = 10; // Quantos livros serão mostrados inicialmente
@@ -79,7 +79,26 @@ export class BooksComponent implements OnInit, OnDestroy {
     return this.filteredBooks.slice(0, this.visibleBooks);
   }
 
-  showMoreBooks(): void {
-    this.visibleBooks += 10;
+  // showMoreBooks(): void {
+  //   this.visibleBooks += 10;
+  // }
+
+  @HostListener('window:scroll', [])
+  OnScroll():void{
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 100) {
+      // Quando o usuário chegar perto do final da página (100px de distância)
+      this.loadMoreBooks();
+    }
   }
+
+  loadMoreBooks(): void {
+  if (!this.loading && this.visibleBooks < this.filteredBooks.length) {
+    this.loading = true;
+
+    setTimeout(() => {
+      this.visibleBooks += 10;
+      this.loading = false;
+    }, 500);
+  }
+}
 }

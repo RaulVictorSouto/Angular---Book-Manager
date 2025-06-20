@@ -4,7 +4,7 @@
 </div>
 
 <!-- Lista de livros -->
-<div *ngIf="showBookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-8">
+<div (window:scroll)="OnScroll()" *ngIf="showBookList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 px-8">
   <app-display-book
     *ngFor="let book of filteredBooksToShow"
     [book]="book"
@@ -13,16 +13,17 @@
 </div>
 
 <!-- Botão "Ver mais" -->
-<div *ngIf="visibleBooks < filteredBooks.length && !loading" class="text-center mt-6">
+<!-- <div *ngIf="visibleBooks < filteredBooks.length && !loading" class="text-center mt-6">
   <button
     (click)="showMoreBooks()"
     class="bg-blue-600 hover:bg-sky-600 text-white font-semibold py-2 px-8 rounded-full transition-colors"
   >
     Ver mais
   </button>
-</div>
+</div> -->
 
 <!-- Mensagem quando não há livros -->
 <div *ngIf="!loading && filteredBooks.length === 0" class="text-center py-12">
   <div class="text-gray-500">Nenhum livro encontrado</div>
 </div>
+
